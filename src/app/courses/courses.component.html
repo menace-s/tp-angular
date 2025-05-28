@@ -1,28 +1,44 @@
 <div class="courses-container">
-  <h1>{{ titrePage }}</h1>
-  <div>
-    <label for="titrePageInput">Modifier le titre de la page : </label>
-    <input type="text" id="titrePageInput" [(ngModel)]="titrePage" />
-    <button (click)="modifierTitrePage()">Forcer Changement Titre (test)</button>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    <p>Chargement des cours...</p>
   </div>
 
-  <hr>
+  <div *ngIf="!isLoading">
 
-  <div *ngIf="UE && UE.length > 0; else pasDeCours">
+    <h1>{{ titrePage }}</h1>
+    <div>
+      <label for="titrePageInput">Modifier le titre de la page : </label>
+      <input type="text" id="titrePageInput" [(ngModel)]="titrePage" />
+      <button (click)="modifierTitrePage()">Forcer Changement Titre (test)</button>
+    </div>
+
+    <hr>
+
     <p class="summary-message">
-      Total actuel : {{ getTotalEtudiants() }} étudiants - Cela fait : <strong>{{ getMessageEtudiants() }}</strong>
+      {{ getMessageEtudiants() }}
+      <span *ngIf="UE && UE.length > 0"> (Total : {{ getTotalEtudiants() }} étudiants)</span>
     </p>
 
-    <div class="course-list">
-      <app-course
-        *ngFor="let coursItem of UE; let i = index"
-        [contenu]="coursItem"
-        (newNb)="onNewNb($event)">
-      </app-course>
-    </div>
-  </div>
+    <div *ngIf="UE && UE.length > 0; else pasDeCours">
+      <div class="course-list">
+        <div *ngFor="let coursItem of UE; let i = index" class="course-list-item">
+          <h3>
+            <a [routerLink]="['/cours', coursItem.id]">{{ coursItem.titre }}</a>
+          </h3>
+          
+          <app-course
+            [contenu]="coursItem"
+            (newNb)="onNewNb($event)">
+          </app-course>
 
-  <ng-template #pasDeCours>
-    <p>Aucun cours à afficher pour le moment.</p>
-  </ng-template>
-</div>
+          <hr *ngIf="i < UE.length - 1" class="item-separator">
+        </div>
+      </div>
+    </div>
+
+    <ng-template #pasDeCours>
+      <p>Aucun cours à afficher pour le moment.</p>
+    </ng-template>
+
+  </div> </div>

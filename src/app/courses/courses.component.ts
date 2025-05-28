@@ -1,79 +1,103 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // OnDestroy ajouté ici
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Course } from '../course/course';         // Modèle de données
+import { Course } from '../course/course';      // Modèle de données (chemin corrigé si besoin)
 import { CourseComponent } from '../course/course.component'; // Composant enfant
+import { CourseService } from '../course.service';    // Service pour obtenir les cours
+import { Subscription } from 'rxjs';                  // Pour gérer la désinscription
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-courses', // Sélecteur pour <app-courses>
+  selector: 'app-courses',
   standalone: true,
   imports: [
-    CommonModule,      // Pour *ngFor, *ngIf, etc.
-    FormsModule,       // Pour [(ngModel)] sur le titre principal
-    CourseComponent    // Pour pouvoir utiliser <app-course> dans le template
+    CommonModule,
+    FormsModule,
+    CourseComponent,
+    RouterModule
   ],
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.css']
 })
-export class CoursesComponent implements OnInit {
-  titrePage: string = 'Liste des cours et nombre d\'étudiants'; // Titre principal de la page
-  nb_etuds!: number;
-  UE: Course[] = [
-    { titre: 'Mathématiques (M1)', nb_etud: 2 },
-    { titre: 'Physique (P1)', nb_etud: 3 },
-    { titre: 'Informatique (I1)', nb_etud: 4 },
-  ];
+export class CoursesComponent implements OnInit, OnDestroy { // Implémente OnDestroy
+  titrePage: string = 'Liste des cours et nombre d\'étudiants';
+  // nb_etuds!: number; // Commenté car on suit la stratégie de source de vérité unique = UE
+  UE: Course[] = []; // Initialisé vide, sera rempli par le service
 
-  // La propriété 'nb_etuds' (total stocké) n'est plus essentielle pour getMessageEtudiants()
-  // si getMessageEtudiants() recalcule toujours à partir de UE.
-  // On la retire pourtitrePage simplifier et suivre la stratégie de "source de vérité unique = UE".
+  isLoading: boolean = true; // <<--- CORRECTION PRINCIPALE : Initialiser à true
 
-  constructor() { }
+  private courseSubscription!: Subscription;
+
+  constructor(private courseService: CourseService) { }
 
   ngOnInit(): void {
-    // Il n'est plus nécessaire d'initialiser un 'this.nb_etuds' séparé
-    // si getMessageEtudiants se base sur getNbEtuds() qui lit UE.
-    console.log('CoursesComponent initialisé. État initial de UE:', this.UE);
+    console.log('CoursesComponent: ngOnInit - Début du chargement des cours...');
+    // this.isLoading = true; // Plus nécessaire ici si initialisé à true dans la déclaration
+
+    this.courseSubscription = this.courseService.getCourses().subscribe({
+      next: (dataCourses) => {
+        console.log('CoursesComponent: Données reçues!', dataCourses);
+        this.UE = dataCourses;
+        this.isLoading = false; // Cacher l'indicateur une fois les données reçues
+      },
+      error: (err) => {
+        console.error('CoursesComponent: Erreur lors de la récupération des cours', err);
+        this.isLoading = false; // Cacher aussi en cas d'erreur
+        // Tu pourrais vouloir vider UE ou afficher un message d'erreur spécifique
+        // this.UE = []; 
+      },
+      complete: () => {
+        console.log('CoursesComponent: Observable des cours complété.');
+      }
+    });
+
+    console.log('CoursesComponent: ngOnInit - Souscription effectuée, en attente des données...');
   }
 
-  // Calcule et retourne le nombre total d'étudiants en parcourant UE.
-  // C'est la méthode qui lit la "source de vérité" (this.UE).
+  ngOnDestroy(): void {
+    if (this.courseSubscription) {
+      this.courseSubscription.unsubscribe();
+      console.log('CoursesComponent: Désinscrit de courseSubscription.');
+    }
+  }
+
   getTotalEtudiants(): number {
     let total = 0;
     if (this.UE && this.UE.length > 0) {
       for (const course of this.UE) {
-        // S'assure que nb_etud est un nombre, utilise 0 si NaN ou undefined
         const etudiantsDansCeCours = Number(course.nb_etud) || 0;
         total += etudiantsDansCeCours;
       }
     }
-    // console.log('Total étudiants recalculé (getTotalEtudiants):', total); // Pour déboguer
     return total;
   }
 
-  // Détermine le message ("beaucoup" ou "peu") en se basant sur le total actuel.
   getMessageEtudiants(): string {
-    const total = this.getTotalEtudiants(); // Utilise toujours le total frais calculé à partir de UE
-
-    if (isNaN(total)) { // Devrait moins arriver avec Number(course.nb_etud) || 0
-      return "Nombre d'étudiants en cours de calcul...";
+    // Gérer le cas où le chargement est toujours en cours pour le message
+    if (this.isLoading) {
+      return "Chargement des données des cours...";
     }
 
-    return total >= 10 ? "beaucoup d'étudiants" : "peu d'étudiants";
+    const total = this.getTotalEtudiants();
+
+    // Si après le chargement, UE est vide (ou total est 0 si aucun étudiant)
+    if (this.UE.length === 0) {
+        return "Aucun cours disponible."; // Ou un autre message approprié
+    }
+    
+    // Si le total est NaN (ne devrait pas arriver avec la protection dans getTotalEtudiants)
+    if (isNaN(total)) {
+      return "Calcul du nombre d'étudiants invalide...";
+    }
+
+    return total >= 150 ? "beaucoup d'étudiants" : "peu d'étudiants";
   }
 
-  // Méthode appelée lorsque l'enfant émet l'événement (newNb).
-  // 'difference' est la variation du nombre d'étudiants pour UN cours.
   onNewNb(difference: number): void {
-    console.log(`Un cours a changé son nombre d'étudiants de : ${difference}. Le total sera recalculé.`);
-    // Pas besoin de : this.nb_etuds_total_stocke += difference;
-    // car this.UE est déjà à jour (grâce à [(ngModel)] dans l'enfant qui modifie l'objet référé),
-    // et getMessageEtudiants() utilise getTotalEtudiants() qui lit this.UE.
-    // La détection de changement d'Angular s'occupera de rafraîchir l'affichage.
+    console.log(`Un cours a changé son nombre d'étudiants de : ${difference}. Le total affiché sera recalculé à partir de UE.`);
   }
 
-  // Méthode pour modifier le titre principal (juste pour l'exemple)
   modifierTitrePage(): void {
-    this.titrePage= 'Nouveau Titre pour la Page des Cours !';
+    this.titrePage = 'Nouveau Titre pour la Page des Cours !';
   }
 }

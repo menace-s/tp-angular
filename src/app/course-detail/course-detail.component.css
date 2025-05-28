@@ -1,0 +1,132 @@
+/* Styles pour le composant CourseDetail (course-detail.component.css) */
+
+/* Palette de couleurs de référence (similaire à courses.component.css) :
+   - Bleu principal (boutons, accents) : #007bff
+   - Bleu plus foncé (survol bouton) : #0056b3
+   - Rouge erreur : #dc3545
+   - Fond d'erreur clair : #f8d7da
+   - Gris foncé (texte principal) : #333
+   - Gris moyen (texte secondaire, labels) : #555
+   - Gris clair (bordures) : #e0e0e0
+   - Fond de carte/conteneur : #ffffff
+   - Ombre : rgba(0, 0, 0, 0.08) ou rgba(0, 0, 0, 0.1)
+*/
+
+/* Conteneur principal de la page de détail */
+.course-detail-container {
+  max-width: 800px;
+  margin: 30px auto; /* Un peu plus de marge en haut/bas */
+  padding: 25px 30px; /* Un peu plus de padding horizontal */
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre similaire aux cartes de la liste */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Suggestion de police */
+}
+
+/* Titre principal du cours */
+.course-title {
+  color: #333;
+  border-bottom: 3px solid #007bff; /* Bordure d'accentuation plus épaisse */
+  padding-bottom: 15px;
+  margin-top: 0;
+  margin-bottom: 30px; /* Plus d'espace après le titre */
+  font-size: 2.2em;   /* Titre plus grand pour la page de détail */
+  font-weight: 600;   /* Un peu plus de graisse */
+}
+
+/* Section contenant les informations du cours */
+.course-info-section {
+  margin-bottom: 30px;
+}
+
+/* Style pour chaque ligne d'information (Titre, Nombre d'étudiants, Description) */
+.course-info-item {
+  font-size: 1.1em;
+  line-height: 1.8; /* Augmenter l'interligne pour la lisibilité */
+  margin-bottom: 15px;
+  color: #555; /* Couleur de texte un peu plus douce */
+}
+
+.course-info-item strong {
+  color: #333; /* Labels en gras un peu plus foncés */
+  min-width: 180px; /* Ajuster si besoin pour l'alignement des labels */
+  display: inline-block;
+  margin-right: 10px; /* Espace entre le label et la valeur */
+}
+
+/* Style spécifique pour la description si elle est un peu plus longue */
+.course-description {
+  background-color: #f9fafb; /* Fond très légèrement grisé pour la distinguer */
+  padding: 15px;
+  border-left: 4px solid #007bff; /* Accent coloré */
+  border-radius: 4px;
+  white-space: pre-wrap; /* Préserve les retours à la ligne et espaces de la description */
+}
+
+/* Styles pour les boutons (cohérents avec courses.component.css) */
+.button {
+  display: inline-block;
+  padding: 12px 20px; /* Boutons un peu plus grands */
+  font-size: 1em;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+  margin-right: 10px;
+}
+
+.button-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.button-primary:hover,
+.button-primary:focus {
+  background-color: #0056b3;
+  outline: none; /* Enlève l'outline par défaut au focus pour un look plus propre si souhaité */
+}
+
+.button-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.button-secondary:hover,
+.button-secondary:focus {
+  background-color: #545b62;
+  outline: none;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Indicateurs de chargement et messages d'erreur/informatifs */
+.loading-indicator,
+.error-message,
+.no-course-message {
+  text-align: center;
+  padding: 30px 20px; /* Plus de padding vertical */
+  font-size: 1.2em;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.loading-indicator {
+    color: #555;
+}
+
+.error-message {
+  color: #721c24; /* Rouge foncé pour le texte de l'erreur */
+  background-color: #f8d7da; /* Fond rosé pour l'erreur */
+  border: 1px solid #f5c6cb; /* Bordure rouge clair */
+}
+
+.no-course-message {
+  color: #666;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+}

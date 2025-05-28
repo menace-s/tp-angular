@@ -1,0 +1,22 @@
+<div class="course-detail-container">
+  <div *ngIf="isLoading" class="loading-indicator">
+    <p>Chargement des détails du cours...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+    <button (click)="goBack()">Retour à la liste</button>
+  </div>
+
+  <div *ngIf="!isLoading && course && !errorMessage" class="course-content">
+    <h2>Détails du Cours : {{ course.titre }}</h2>
+    <p><strong>Titre :</strong> {{ course.titre }}</p>
+    <!-- <p><strong>Nombre d'étudiants :</strong> {{ course.nb_etud }}</p> -->
+    <button (click)="goBack()">Retour à la liste des cours</button>
+  </div>
+
+  <div *ngIf="!isLoading && !course && !errorMessage">
+    <p>Aucun détail de cours à afficher ou cours non trouvé.</p>
+    <button (click)="goBack()">Retour à la liste</button>
+  </div>
+</div>

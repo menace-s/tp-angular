@@ -2,17 +2,93 @@
   font-family: Arial, sans-serif;
   margin: 20px;
 }
+/* Styles pour le composant Courses (courses.component.css) */
 
+/* Palette de couleurs suggérée :
+   - Bleu principal (liens, accents) : #007bff (un bleu vif et agréable)
+   - Bleu clair (fond pour message) : #e6f2ff (plus doux que #eef)
+   - Gris foncé (texte principal) : #333
+   - Gris clair (bordures, texte secondaire) : #ccc
+   - Ombre : rgba(0, 0, 0, 0.1)
+*/
+
+/* Message récapitulatif (Total étudiants, peu/beaucoup) */
 .summary-message {
-  font-size: 1.1em;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #eef;
-  border-left: 5px solid #aac;
+  font-size: 1.15em; /* Légèrement plus grand pour une meilleure lisibilité */
+  margin-bottom: 25px;
+  padding: 15px 20px;
+  background-color: #e6f2ff; /* Un bleu pastel clair, plus doux */
+  border-left: 5px solid #007bff; /* Bordure gauche avec la couleur principale */
+  border-radius: 5px; /* Coins arrondis pour un look moderne */
+  color: #004085; /* Couleur de texte plus foncée pour contraster avec le fond clair */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre discrète */
 }
 
+.summary-message strong {
+  color: #0056b3; /* Couleur plus foncée pour le texte en gras */
+}
+
+/* Conteneur de la liste des cours (la grille) */
 .course-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Taille min un peu plus grande pour chaque carte */
+  gap: 20px; /* Espace un peu plus grand entre les cartes */
 }
+
+/* Style pour chaque élément/carte de cours dans la liste */
+.course-list-item {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0; /* Bordure subtile */
+  border-radius: 8px; /* Coins arrondis plus prononcés */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Ombre plus marquée pour l'effet de carte */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Animation douce au survol */
+}
+
+.course-list-item:hover {
+  transform: translateY(-5px); /* Léger effet de soulèvement au survol */
+  box-shadow: 0 6px Grière12px rgba(0, 0, 0, 0.12);
+}
+
+/* Style pour les titres de cours (qui sont des liens) */
+.course-list-item h3 {
+  margin-top: 0;
+  margin-bottom: 15px; /* Espace après le titre */
+}
+
+.course-list-item h3 a {
+  color: #007bff; /* Couleur principale pour les liens */
+  text-decoration: none; /* Enlève le soulignement par défaut */
+  font-weight: bold; /* Met le titre en gras */
+  font-size: 1.3em;
+  transition: color 0.2s ease-in-out;
+}
+
+.course-list-item h3 a:hover,
+.course-list-item h3 a:focus {
+  color: #0056b3; /* Couleur plus foncée au survol/focus */
+  text-decoration: underline; /* Souligne le lien au survol pour une meilleure indication */
+}
+
+/* Style pour le composant <app-course> imbriqué, si besoin d'ajustement de marge */
+.course-list-item app-course {
+  display: block; /* Assure qu'il prend la largeur et permet les marges */
+  margin-top: 10px;
+}
+
+/* Séparateur entre les cours (optionnel, si vous l'utilisez) */
+hr.item-separator {
+  border: 0;
+  height: 1px;
+  background-color: #eee; /* Couleur de séparateur très claire */
+  margin-top: 20px; /* Espace avant le séparateur s'il suit app-course */
+}
+
+/* Suggestion globale pour le conteneur principal si vous voulez une police cohérente */
+/* Si vous avez un .courses-container dans courses.component.html */
+/*
+.courses-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+}
+*/
