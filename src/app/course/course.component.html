@@ -1,0 +1,17 @@
+<div class="course-card" *ngIf="contenu"> <h4>Cours : {{ contenu.titre }}</h4>
+  <div>
+    <label for="nb_etud_{{contenu.titre}}">Étudiants : </label>
+    <input
+      type="number"
+      id="nb_etud_{{contenu.titre}}"
+      [(ngModel)]="contenu.nb_etud"
+      (ngModelChange)="onNbEtudChange()"
+      min="0"
+      class="student-input"
+      class="student-input"
+    />
+  </div>
+</div>
+<div *ngIf="!contenu">
+  <p>Information du cours non disponible.</p>
+</div>

@@ -1,0 +1,28 @@
+<div class="courses-container">
+  <h1>{{ titrePage }}</h1>
+  <div>
+    <label for="titrePageInput">Modifier le titre de la page : </label>
+    <input type="text" id="titrePageInput" [(ngModel)]="titrePage" />
+    <button (click)="modifierTitrePage()">Forcer Changement Titre (test)</button>
+  </div>
+
+  <hr>
+
+  <div *ngIf="UE && UE.length > 0; else pasDeCours">
+    <p class="summary-message">
+      Total actuel : {{ getTotalEtudiants() }} étudiants - Cela fait : <strong>{{ getMessageEtudiants() }}</strong>
+    </p>
+
+    <div class="course-list">
+      <app-course
+        *ngFor="let coursItem of UE; let i = index"
+        [contenu]="coursItem"
+        (newNb)="onNewNb($event)">
+      </app-course>
+    </div>
+  </div>
+
+  <ng-template #pasDeCours>
+    <p>Aucun cours à afficher pour le moment.</p>
+  </ng-template>
+</div>
