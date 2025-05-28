@@ -174,5 +174,3 @@ export interface Course {
 
 > **Pour aller plus loin** : Consultez le code source pour une compréhension détaillée de l’implémentation.
 ```
-
-Ce code Markdown est prêt à être inséré dans ton fichier `README.md`. Il conserve toutes les améliorations proposées (tableaux, blockquotes, badges, table des matières, etc.) pour une présentation claire et professionnelle. Si tu veux ajouter des éléments supplémentaires, comme un diagramme Mermaid pour illustrer le flux de données, fais-moi signe !
